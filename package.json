@@ -9,7 +9,12 @@
     "lint": "eslint",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "docker:build": "docker build -t ship-ready-next .",
+    "docker:run": "docker run --env-file .env -p 3000:3000 ship-ready-next",
+    "docker:stop": "docker stop ship-ready-next",
+    "docker:remove": "docker rm ship-ready-next",
+    "docker:logs": "docker logs ship-ready-next"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
@@ -26,7 +31,9 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
+    "next-env-safe": "^1.0.2",
     "next-themes": "^0.4.6",
+    "pg": "^8.13.1",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-day-picker": "^9.14.0",
@@ -42,6 +49,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.11.10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.9",
