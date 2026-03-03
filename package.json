@@ -11,7 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "docker:build": "docker build -t ship-ready-next .",
-    "docker:run": "docker run --env-file .env -p 3000:3000 ship-ready-next",
+    "docker:run": "docker run --name ship-ready-next --env-file .env -p 3000:3000 ship-ready-next",
     "docker:stop": "docker stop ship-ready-next",
     "docker:remove": "docker rm ship-ready-next",
     "docker:logs": "docker logs ship-ready-next"

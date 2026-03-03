@@ -1,5 +1,5 @@
 {
-    "image": "mcr.microsoft.com/devcontainers/typescript-node",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "configureZshAsDefaultShell": true

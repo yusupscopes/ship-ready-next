@@ -11,6 +11,11 @@ const databaseUrl = env.DATABASE_URL!;
 // Use Neon serverless driver for Neon URLs; use node-postgres for standard Postgres (e.g. Docker, local)
 const isNeon = databaseUrl.includes("neon.tech");
 
+// Singleton Pool for node-postgres to avoid connection leaks during hot reload
+const globalForPg = globalThis as unknown as { __pgPool?: Pool };
+const pool =
+  globalForPg.__pgPool ?? (globalForPg.__pgPool = new Pool({ connectionString: databaseUrl }));
+
 export const db = isNeon
   ? drizzleNeon(databaseUrl)
-  : drizzlePg(new Pool({ connectionString: databaseUrl }));
+  : drizzlePg(pool);

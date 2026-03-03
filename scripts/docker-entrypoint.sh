@@ -14,6 +14,13 @@ if echo "$DATABASE_URL" | grep -q '@db:'; then
 fi
 
 # Run migrations (no-op if no migrations or already applied)
-npx drizzle-kit migrate 2>/dev/null || true
+set +e
+migrate_out=$(pnpm drizzle-kit migrate 2>&1)
+migrate_ret=$?
+set -e
+if [ -n "$migrate_out" ] || [ "$migrate_ret" -ne 0 ]; then
+  echo "drizzle-kit migrate produced output or failed (exit $migrate_ret); continuing anyway:" >&2
+  echo "$migrate_out" >&2
+fi
 
 exec "$@"

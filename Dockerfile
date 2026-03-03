@@ -52,11 +52,13 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Migrations and config for entrypoint (drizzle-kit migrate)
+COPY --from=builder /app/env.ts ./env.ts
 COPY --from=builder /app/migrations ./migrations
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/db ./db
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm install --frozen-lockfile --prod && pnpm add drizzle-kit
 
 COPY --chown=nextjs:nodejs scripts/docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
