@@ -11,8 +11,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_healthy
+      # redis:
+      #   condition: service_healthy
 
   db:
     image: postgres:16-alpine
@@ -32,21 +32,21 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:alpine
-    container_name: ship-ready-next-redis
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - redisdata:/data
-    command: redis-server --save 60 1 --loglevel warning
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+  # redis:
+  #   image: redis:alpine
+  #   container_name: ship-ready-next-redis
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redisdata:/data
+  #   command: redis-server --save 60 1 --loglevel warning
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
 
 volumes:
   pgdata:
-  redisdata:
+  # redisdata:
