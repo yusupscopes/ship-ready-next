@@ -87,7 +87,7 @@ jobs:
           script: |
             cd ${{ secrets.PATH }}
             docker stop ship-ready-next || true
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ${{ env.REGISTRY }} -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u "${{ github.actor }}" --password-stdin
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
             docker rm -f ship-ready-next || true
             docker run -d --name ship-ready-next -p 3000:3000 \
