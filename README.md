@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ship Ready Next
 
-## Getting Started
+[![Publish Container](https://github.com/yusupscopes/ship-ready-next/actions/workflows/publish-container.yml/badge.svg)](https://github.com/yusupscopes/ship-ready-next/actions/workflows/publish-container.yml)
 
-First, run the development server:
+A production-ready Next.js starter with authentication, type-safe API layer, and database persistence. Built to demonstrate how to ship a full-stack app with modern tooling and deployment workflows.
+
+## 🚀 Key Features & Learning Outcomes
+
+This project was built to cover essential full-stack patterns:
+
+- **App Router & React 19:** Next.js 16 App Router with server components, layouts, and streaming.
+- **Type-Safe API (tRPC):** End-to-end typed procedures with Zod validation and TanStack Query integration.
+- **Database Persistence (PostgreSQL):** Drizzle ORM with migrations; schema for users, sessions, accounts, and verification.
+- **Authentication (Better Auth):** Email/password and Google OAuth, with Drizzle adapter and session handling.
+- **Environment & Config:** Validated server and client env via `next-env-safe` and Zod.
+- **Health Check:** `/api/health` endpoint for load balancers and CI container validation.
+- **Production Deployment:** Multi-stage Dockerfile, Docker Compose (app + Postgres), and GitHub Actions to build, test the container, and deploy via SSH.
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **UI:** React 19, Tailwind CSS, Radix UI / Base UI
+- **API:** tRPC v11, Zod
+- **Data:** Drizzle ORM, PostgreSQL
+- **Auth:** Better Auth (email/password + Google)
+- **Containerization:** Docker & Docker Compose
+
+## 📦 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (LTS) and [pnpm](https://pnpm.io/)
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose (for running with Postgres)
+
+### Running locally (with existing Postgres)
+
+1. Clone this repository.
+2. Copy `.env.example` to `.env` and set `DATABASE_URL`, `BETTER_AUTH_*`, and other required variables (see `env.ts`).
+3. From the project root:
+   ```bash
+   pnpm install
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000).
+
+### Running with Docker Compose
+
+1. Clone this repository and ensure you have a `.env` file (see `docker-compose.yml` for `POSTGRES_*` and app env vars).
+2. From the project root:
+   ```bash
+   docker compose up --build
+   ```
+   This starts the Next.js app on port `3000` and Postgres on port `5432`, with the app waiting for the DB to be healthy.
+
+## 💻 API Usage
+
+### 1. Health Check (Public)
+
+For load balancers or CI, call the health endpoint:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+curl -s http://localhost:3000/api/health
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Response:** `OK` (plain text, 200)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. tRPC: Hello procedure (example)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The app exposes tRPC at `/api/trpc`. Example procedure: `hello.sayHello`.
 
-## Learn More
+**Request (GET):**
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+curl "http://localhost:3000/api/trpc/hello.sayHello?input=%7B%22text%22%3A%22world%22%7D"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Response (JSON):**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```json
+{
+  "result": {
+    "data": {
+      "json": {
+        "greeting": "hello world"
+      }
+    }
+  }
+}
+```
 
-## Deploy on Vercel
+_(Use the tRPC client in the app for type-safe calls with TanStack Query.)_
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Authentication
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Sign up / Sign in:** Use the Better Auth routes under `/api/auth/*` (e.g. `/sign-in`, `/sign-up` in the app).
+- **Session:** `auth.api.getSession({ headers })` in server components or API routes.
+
+## 🧪 Quality Checks
+
+Lint the codebase:
+
+```bash
+pnpm lint
+```
+
+Generate and run database migrations:
+
+```bash
+pnpm db:generate
+pnpm db:migrate
+```
+
+Open Drizzle Studio to inspect data:
+
+```bash
+pnpm db:studio
+```
