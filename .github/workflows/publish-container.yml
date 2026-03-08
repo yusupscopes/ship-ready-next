@@ -81,4 +81,6 @@ jobs:
             cd /etc/docker/containers/ship-ready-next
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose pull app
+            docker compose exec app pnpm db:generate
+            docker compose exec app pnpm db:migrate
             docker compose up -d
